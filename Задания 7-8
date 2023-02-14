@@ -1,0 +1,23 @@
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+import pandas as pd
+df = pd.DataFrame(data=array)
+#7. Создайте версию массива, содержащую информацию только о рецептах, состоящих не более чем из 5 ингредиентов.
+a1 = np.empty(shape=(0, 3), dtype=np.int32)
+a = np.shape(array)
+
+for i in range(a[0]):
+    if array[i][2] <= 5:
+        a1 = np.vstack([a1, array[i]])
+print(a1)
+
+#8Для каждого рецепта посчитайте, сколько в среднем ингредиентов приходится на одну минуту рецепта.
+# Найдите максимальное значение этой величины для всего датасета
+bmax = 0.0
+for i in array:
+    if i[1] == 0: continue
+    b = i[2]/i[1]
+    if bmax<b:
+        bmax=b
+    print(i[0],'mean ingredients per minute:', b)
+print('max value: ', bmax)
