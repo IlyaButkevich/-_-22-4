@@ -1,0 +1,28 @@
+#4.Посчитайте, для скольких рецептов указана продолжительность, равная нулю. Замените для таких строк значение в данном столбце на 1.
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+a = np.shape(array)
+counter1 = 0
+for i in range(a[0]):
+    if array[i][1] == 0:
+        counter1 +=1
+        #changer
+        array[i][1] = 1
+print('number of zeros: ', counter1)
+
+
+import pandas as pd
+df = pd.DataFrame(data=array)
+
+#5.Посчитайте, сколько уникальных рецептов находится в датасете.
+print('number of unique recepts: ', df[0].nunique())
+
+#6. Сколько и каких различных значений кол-ва ингредиентов присутвует в рецептах из датасета?
+max1 = np.max(array, axis=0)
+counter2 = 0
+for i in range(int(max1[2])):
+    a1 = (df[2] == i).sum()
+    if a1 != 0:
+        counter2 += 1
+        print(i, a1)
+print(counter2)
