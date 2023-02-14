@@ -1,0 +1,36 @@
+#1. Файл minutes_n_ingredients.csv содержит информацию об идентификаторе рецепта,
+# времени его выполнения в минутах и количестве необходимых ингредиентов.
+# Считайте данные из этого файла в виде массива numpy типа int32, используя np.loadtxt.
+# Выведите на экран первые 5 строк массива.
+
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+for i in range(5):
+    print(array[i])
+
+
+#2. Вычислите среднее значение, минимум, максимум и медиану по каждому из столбцов, кроме первого
+mx = np.mean(array, axis = 0, dtype=np.float64)
+print('среднее значение столбцов 2, 3: ', mx[1], mx[2])
+
+min1 = np.min(array, axis = 0)
+print('минимальное значение столбцов 2, 3: ', min1[1], min1[2])
+
+max1 = np.max(array, axis=0)
+print('максимальное значение столбцов 2, 3: ', max1[1], max1[2])
+
+median1 = np.median(array, axis=0)
+print('медианное значение столбцов 2, 3: ', median1[1], median1[2])
+
+
+#3. Ограничьте сверху значения продолжительности выполнения рецепта значением квантиля q075
+quant1 = np.quantile(array, 0.75, axis=0)
+print('значение квантиля: ', quant1[1])
+a = np.shape(array)
+
+for i in range(a[0]):
+    if array[i][1] >quant1[1]:
+        array[i][1] = quant1[1]
+#test
+mx = np.mean(array, axis = 0, dtype=np.float64)
+print('среднее значение столбцов 2: ', mx[1])
