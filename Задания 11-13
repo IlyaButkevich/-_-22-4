@@ -1,0 +1,28 @@
+#11. Выведите процент рецептов, кол-во ингредиентов в которых меньше среднего.
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+mx = np.mean(array, axis = 0, dtype=np.float64)
+counter1 = 0
+a = np.shape(array)
+for i in array:
+    if i[2] < mx[2]:
+        counter1 += 1
+print(counter1 * 100.0 / a[0], '%')
+
+#12Назовем "простым" такой рецепт, длительность выполнения которого не больше 20 минут
+# и кол-во ингредиентов в котором не больше 5. Создайте версию датасета с дополнительным столбцом,
+# значениями которого являются 1, если рецепт простой, и 0 в противном случае.
+column = np.empty(shape=(a[0], 1), dtype=np.int32)
+array1=np.append(array, column, axis = 1)
+counter2 = 0
+for row in array1:
+    if (row[1] <= 20 and row[2] <= 5):
+        row[3] = 1
+        counter2 += 1
+    else: row[3]=0
+
+print(array1)
+
+#13Выведите процент "простых" рецептов в датасете
+
+print(counter2 * 100.0 / a[0], '%')
