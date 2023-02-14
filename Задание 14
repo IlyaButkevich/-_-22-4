@@ -1,0 +1,51 @@
+#14Разделим рецепты на группы по следующему правилу. Назовем рецепты короткими,
+# если их продолжительность составляет менее 10 минут; стандартными,
+# если их продолжительность составляет более 10, но менее 20 минут;
+# и длинными, если их продолжительность составляет не менее 20 минут.
+# Создайте трехмерный массив, где нулевая ось отвечает за номер группы
+# (короткий, стандартный или длинный рецепт), первая ось - за сам рецепт и вторая ось -
+# за характеристики рецепта. Выберите максимальное количество рецептов из каждой группы
+# таким образом, чтобы было возможно сформировать трехмерный массив.
+# Выведите форму полученного массива.
+
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+mx = np.mean(array, axis = 0, dtype=np.float64)
+
+cnt1=0
+cnt2=0
+cnt3=0
+for row in array:
+    if(row[1] < 10): cnt1 += 1
+    if(row[1] >= 10 and row[1] < 20): cnt2 += 1
+    if(row[1] >= 20): cnt3 += 1
+
+# find min cnt
+cnt=cnt1
+if (cnt > cnt2): cnt = cnt2
+if(cnt > cnt3): cnt = cnt3
+
+array3d = np.empty(shape=(3, cnt, 3), dtype=np.int32)
+
+cnt1=0
+cnt2=0
+cnt3=0
+for row in array:
+    if(row[1] < 10 and cnt1 < cnt):
+        array3d[0][cnt1][0] = row[0]
+        array3d[0][cnt1][1] = row[1]
+        array3d[0][cnt1][2] = row[2]
+        cnt1 += 1
+    if(row[1] >= 10 and row[1] < 20 and cnt2 < cnt):
+        array3d[1][cnt2][0] = row[0]
+        array3d[1][cnt2][1] = row[1]
+        array3d[1][cnt2][2] = row[2]
+        cnt2 += 1
+    if(row[1] >= 20 and cnt3 < cnt):
+        array3d[2][cnt3][0] = row[0]
+        array3d[2][cnt3][1] = row[1]
+        array3d[2][cnt3][2] = row[2]
+        cnt3 += 1
+    if(cnt1 >= cnt and cnt2 >= cnt and cnt3 >= cnt): break
+
+print(array3d)
