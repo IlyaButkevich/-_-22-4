@@ -1,0 +1,19 @@
+#9.Вычислите среднее количество ингредиентов для топ-100 рецептов с наибольшей продолжительностью
+import numpy as np
+array = np.loadtxt('minutes_n_ingredients.csv', dtype = np.int32, delimiter = ',', skiprows = 1)
+array = array[array[:,1].argsort()]
+counter1 = 0.0
+a = np.shape(array)
+for i in range(100):
+    counter1 += array[a[0]-i-1][2]
+counter1/=100
+print('mean ingedients for top 100: ',counter1)
+
+#10.Выберите случайным образом и выведите информацию о 10 различных рецептах
+import random
+
+for i1 in range(10):
+    a = np.shape(array)
+    index1 = random.randint(0, a[0] - 1)
+    print(array[index1])
+    array = np.delete(array, index1, axis=0)
