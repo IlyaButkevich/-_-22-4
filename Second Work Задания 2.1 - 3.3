@@ -1,0 +1,34 @@
+#2.1 Преобразуйте столбец submitted из таблицы recipes в формат времени.
+# Модифицируйте решение задачи 1.1 так, чтобы считать столбец сразу в нужном формате.
+from datetime import datetime
+
+import pandas as pd
+recipes = pd.read_csv('recipes_sample.csv')
+reviews = pd.read_csv('reviews_sample.csv')
+recipes['submitted'] = recipes['submitted'].astype("datetime64[ns]")
+print(recipes['submitted'])
+
+recipes = pd.read_csv('recipes_sample.csv', parse_dates=['submitted'])
+print(recipes['submitted'])
+
+#2.2 Выведите информацию о рецептах, добавленных в датасет не позже 2010 года.
+a = datetime(2010, 1, 1)
+a1 = recipes.loc[recipes['submitted'] <a]
+print(a1)
+
+#3.1 Добавьте в таблицу recipes столбец description_length, в котором хранится длина описания рецепта из столбца description.
+recipes = recipes.assign(description_length = recipes['description'].str.len())
+print(recipes['description_length'])
+recipes['description_length'].to_csv('recipes_sample3_1.csv', sep = ',')
+
+#3.2 Измените название каждого рецепта в таблице recipes таким образом, чтобы каждое слово в названии начиналось с прописной буквы.
+recipes = recipes.assign(name = recipes['name'].str.lower())
+print(recipes['name'])
+recipes['name'].to_csv('recipes_sample3_2.csv', sep = ',')
+
+#3.3 Добавьте в таблицу recipes столбец name_word_count, в котором хранится количество слов из названии рецепта
+# (считайте, что слова в названии разделяются только пробелами).
+# Обратите внимание, что между словами может располагаться несколько пробелов подряд.
+recipes = recipes.assign(name_word_count = recipes['name'].str.split().str.len())
+print(recipes['name_word_count'])
+recipes['name_word_count'].to_csv('recipes_sample3_3.csv', sep = ',')
