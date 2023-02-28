@@ -1,0 +1,43 @@
+#4.1 Посчитайте количество рецептов, представленных каждым из участников (contributor_id).
+# Какой участник добавил максимальное кол-во рецептов?
+import pandas as pd
+recipes = pd.read_csv('recipes_sample.csv')
+reviews = pd.read_csv('reviews_sample.csv')
+col1 = recipes['contributor_id'].value_counts()
+print('Number of recipes per user from most to least: \n', col1)
+
+#4.2 Посчитайте средний рейтинг к каждому из рецептов. Для скольких рецептов отсутствуют отзывы?
+# Обратите внимание, что отзыв с нулевым рейтингом или не заполненным текстовым описанием не считается отсутствующим.
+
+a1 = (reviews.groupby(pd.Grouper(key = 'recipe_id'))['rating'].mean())
+print(a1)
+
+df_NaN = reviews[reviews[['review', 'rating']].isna().any(axis=1)]
+df_NaN2 = df_NaN['recipe_id'].value_counts(dropna = False)
+print('No reviews: ', len(df_NaN2))
+
+#4.3 Посчитайте количество рецептов с разбивкой по годам создания.
+from datetime import datetime
+recipes['submitted'] = recipes['submitted'].astype("datetime64[ns]")
+#df3 = recipes.groupby(by = ['submitted', 'id'])['id'].count().to_frame(name = 'counter').reset_index()
+#newdata['count'] = recipes.groupby(y)['submitted', ''].transform('size')
+df3 = recipes.groupby(recipes.submitted.dt.year)['id'].count()
+print(df3)
+
+#5.1 При помощи объединения таблиц, создайте DataFrame, состоящий из четырех столбцов: id, name, user_id, rating.
+# Рецепты, на которые не оставлен ни один отзыв, должны отсутствовать в полученной таблице.
+# Подтвердите правильность работы вашего кода, выбрав рецепт, не имеющий отзывов, и попытавшись найти строку,
+# соответствующую этому рецепту, в полученном DataFrame.
+newdf = recipes.copy()
+a = newdf.rename(dict(contributor_id = 'user_id'), axis = 1)
+a = pd.merge(left = reviews, right = a, on = 'user_id')
+del a['recipe_id']
+del a['date']
+del a['submitted']
+del a['n_steps']
+del a['description']
+del a['n_ingredients']
+del a['review']
+del a['minutes']
+a = a.loc[:, ~a.columns.str.contains('^Unnamed')]
+print(a.sample(100).to_string())
