@@ -1,0 +1,42 @@
+#1.1 В файлах recipes_sample.csv и reviews_sample.csv находится информация об рецептах блюд и отзывах на эти рецепты соответственно.
+# Загрузите данные из файлов в виде pd.DataFrame с названиями recipes и reviews.
+# Обратите внимание на корректное считывание столбца с индексами в таблице reviews (безымянный столбец).
+import pandas as pd
+recipes = pd.read_csv('recipes_sample.csv')
+reviews = pd.read_csv('reviews_sample.csv')
+
+#1.2 Для каждой из таблиц выведите основные параметры:
+# количество точек данных (строк);
+# количество столбцов;
+# тип данных каждого столбца.
+print('Number of rows, columns in recipes: ', recipes.shape[0], ',', recipes.shape[1],)
+print('Data types for each column: ',recipes.dtypes)
+print('\nNumber of rows, columns in reviews: ', reviews.shape[0], ',', reviews.shape[1],)
+print('Data types for each column: ',reviews.dtypes)
+
+#1.3 Исследуйте, в каких столбцах таблиц содержатся пропуски. Посчитайте долю строк, содержащих пропуски, в отношении к общему количеству строк.
+empt = (recipes.isna().sum(axis=1) > 0).sum()
+result1 = empt/recipes.shape[0]
+print("\nProportion of empty rows in recipes: %6.2f" % (result1))
+print('Number of spaces per collumn in recipes: ',recipes.isna().sum(axis=0))
+
+
+#1.4 Рассчитайте среднее значение для каждого из числовых столбцов (где это имеет смысл).
+print('\nMean time in minutes in recipes: ', recipes['minutes'].mean())
+print('Mean number of steps in recipes: ',recipes['n_steps'].mean())
+print('Mean number of ingredients in recipes: ',recipes['n_ingredients'].mean())
+print('Mean rating in reviews: ',reviews['rating'].mean())
+
+#1.5 Создайте серию из 10 случайных названий рецептов.
+a = recipes.sample(n = 10)
+a1 = pd.Series(a['name'])
+print('\n10 random recipes names: \n',a1)
+
+#1.6 Измените индекс в таблице reviews, пронумеровав строки, начиная с нуля.
+import numpy as np
+reviews['unnamed'] = np.arange(reviews.shape[0])
+print('\n', reviews)
+
+#1.7 Выведите информацию о рецептах, время выполнения которых не больше 20 минут и кол-во ингредиентов в которых не больше 5.
+b = recipes.loc[((recipes['minutes'] <= 20) & (recipes['n_ingredients'] <=5))]
+print(b)
